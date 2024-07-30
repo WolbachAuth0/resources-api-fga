@@ -1,0 +1,16 @@
+{
+  "name": "doc-sign-fga",
+  "version": "1.0.0",
+  "description": "Custom demo app for Advisor 360",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "okta",
+    "fga",
+    "auth0"
+  ],
+  "author": "aaron.wolbach@okta.com",
+  "license": "ISC"
+}
