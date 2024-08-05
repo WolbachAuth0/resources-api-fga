@@ -1,9 +1,6 @@
-const { auth, requiresAuth } = require('express-openid-connect')
 const checkJWTScopes = require('express-jwt-authz')
-// const checkJWTScopes = require('./checkJWTScopes')
 const jwt = require('express-jwt')
 const jwks = require('jwks-rsa')   
-
 
 /**
  * Verify JWT issued via Authorization Code Flow w/PKCE to user
@@ -30,7 +27,6 @@ function checkJWTPermissions (permissions) {
 
 module.exports = {
   verifyJWT,
-  requiresAuth,
   checkJWTScopes,
   checkJWTPermissions
 }
