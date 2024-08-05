@@ -31,17 +31,12 @@ app.use('/public', serveStatic(path.join(__dirname, './../public')))
 
 // API routes
 const home = require('./routes')                  // The root endpoints
+const profile = require('./routes/profile')
+const resources = require('./routes/resources')
 
-app.use('/api', home)
-
-// this * route is to serve project on different page routes except root `/`
-app.get(/.*/, (req, res) => {
-  try {
-    res.sendFile(path.join(__dirname, './../dist/index.html'))
-  } catch (error) {
-    res.json({ success: false, message: "Something went wrong" });
-  }
-})
+app.use('/', home)
+app.use('/profile', profile)
+app.use('/resources', resources)
 
 // express-winston errorLogger AFTER the other routes have been defined.
 app.use(errorLogger)
