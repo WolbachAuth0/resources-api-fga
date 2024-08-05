@@ -7,30 +7,7 @@ const jsonfile = require('jsonfile')
 module.exports = router
 
 router
-  .route('/specification')
-  .get((req, res) => {
-    // server/openapi-specs/redoc.html
-    res.sendFile(path.join(__dirname, '../views/redoc.html'))
-  })
-
-router
-  .route('/v1/specification')
-  .get(async (req, res) => {
-    const environ = process.env.NODE_ENV
-    let openapispec = {}
-    if (environ == 'production') {
-      openapispec = await jsonfile.readFile(path.join(__dirname, '../openapi-docs/openapi.json'))
-    } else if (environ == 'development') {
-      openapispec = await jsonfile.readFile(path.join(__dirname, '../openapi-docs/openapi.dev.json'))
-    } else {
-      openapispec = require('./../openapi-docs')
-    }
-
-    res.json(openapispec)
-  })
-
-router
-  .route('/hello')
+  .route('/')
   .get((req, res) => {
     try {
       const status = 200
