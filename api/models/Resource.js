@@ -72,22 +72,11 @@ class Resource {
 
   list (query) {
     // TODO: deal with queries
-    const payload = {
-      status: 200,
-      message: `Listed all resources`,
-      data: this.store
-    }
-    return payload
+    return this.store
   }
 
   getById ({ resource_id }) {
-    const resource = this.store.find(x => x.resource_id == resource_id)
-    const payload = {
-      status: resource ? 200 : 404,
-      message: resource ? `Fetched resource with id ${resource_id}` : `Resource with id ${resource_id} not found.`,
-      data: resource
-    }
-    return payload
+    return this.store.find(x => x.resource_id == resource_id)
   }
 
   create ({ text, author }) {
@@ -100,15 +89,10 @@ class Resource {
       author
     }
     this.store.push(resource)
-    const payload = {
-      status: 201,
-      message: `Created resource with id ${resource_id}`,
-      data: resource
-    }
-    return payload
+    return resource
   }
 
-  update ({ resource_id }, { text, author }) {
+  update ({ resource_id, text, author }) {
     const index = this.store.findIndex(x => x.resource_id == resource_id)
     const resource = {
       resource_id,
@@ -117,23 +101,13 @@ class Resource {
       author
     }
     this.store.splice(index, 1, resource)
-    const payload = {
-      status: 200,
-      message: `Updated resource with id ${resource_id}`,
-      data: resource
-    }
-    return payload
+    return resource
   }
 
   remove ({ resource_id }) {
     const index = this.store.findIndex(x => x.resource_id == resource_id)
     this.store.splice(index, 1)
-    const payload = {
-      status: 200,
-      message: `Deleted resource with id ${resource_id}`,
-      data: []
-    }
-    return payload
+    return []
   }
 
 }
