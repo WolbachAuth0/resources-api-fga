@@ -5,7 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 
 // Import API routes
-const home = require('./routes')                  // The root endpoints
+const home = require('./routes')
 const profile = require('./routes/profile')
 const resources = require('./routes/resources')
 
