@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { verifyJWT, checkJWTScopes } = require('./../middleware/auth')
-const admin = require('./../controllers/profile')
+const profile = require('./../controllers/profile')
 
 module.exports = router
 
@@ -13,32 +13,13 @@ function checkJWTUserID (req, res, next) {
   return checkJWTScopes(userIDs, options)(req, res, next)
 }
 
-router.route('/profile/:user_id')
+router.route('/:user_id')
   .all(verifyJWT)
   .all(checkJWTUserID)
   .get(
-    admin.getUserProfile
+    profile.getUserProfile
   )
   .patch(
     // schemaValidator(),
-    admin.updateProfile 
+    profile.updateProfile 
   )
-
-// router.route('/clients')
-//   .all(verifyJWT)
-//   .get(
-//     admin.listM2MClients
-//   )
-//   .post(
-//     // schemaValidator(),
-//     admin.createM2MClient
-//   )
-
-// router.route('/clients/:client_id')
-//   .all(verifyJWT)  
-//   .get(
-//     admin.getM2MClientById
-//   )
-//   .delete(
-//     admin.deleteM2MClientById
-//   )
