@@ -9,10 +9,7 @@ module.exports = {
   update,
   remove,
   schemas: {
-    // createResource: {}
-    // updateResource: {}
-    // postResource: {}
-    // patchResource: {}
+    quotation: Resource.schema
   }
 }
 
