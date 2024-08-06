@@ -49,17 +49,6 @@ const storage = [
   }
 ]
 
-const examples = [
-  {
-    "text": "Only two things are infinite, the universe and human stupidity and I'm not sure about the former.",
-    "author": "Albert Einstein"
-  },
-  {
-    "text": "Strive not to be a success, but rather to be of value.",
-    "author": "Albert Einstein"
-  }
-]
-
 class Resource {
 
   constructor () {
@@ -79,7 +68,8 @@ class Resource {
           type: 'string',
           description: 'The name of the person who said the text of the quotation.'
         }
-      }
+      },
+      required: ['text', 'author']
     }
   }
 
