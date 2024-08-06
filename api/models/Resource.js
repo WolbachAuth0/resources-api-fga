@@ -66,6 +66,23 @@ class Resource {
     this.store = storage
   }
 
+  static get schema () {
+    return {
+      title: 'Quotation',
+      type: 'object',
+      properties: {
+        text: {
+          type: 'string',
+          description: 'The text of the quotation.'
+        },
+        author: {
+          type: 'string',
+          description: 'The name of the person who said the text of the quotation.'
+        }
+      }
+    }
+  }
+
   get nextId () {
     return Math.max(...this.store.map(x => x.resource_id)) + 1
   }
