@@ -5,11 +5,11 @@ const resources = require('./../controllers/resources')
 
 module.exports = router
 
-const options = { failWithError: true }
+// const options = { failWithError: true }
 
 router
   .route('/')
-  // .all(verifyJWT)
+  .all(verifyJWT)
   .get(
     resources.list
   )
@@ -21,7 +21,7 @@ router
 
 router
   .route('/:resource_id')
-  // .all(verifyJWT)                               // verify signature on access token
+  .all(verifyJWT)                               // verify signature on access token
   .get(
     // checkJWTScopes(['read:resource'], options), // verify access token contains necessary permission(s)
     resources.getById                           // execute the get User by Id function
