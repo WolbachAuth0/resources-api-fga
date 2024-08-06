@@ -8,10 +8,10 @@
 module.exports = function (scopes) {
   try {
     const options = {
-      domain: process.env.VUE_APP_AUTH0_DOMAIN,
+      domain: process.env.AUTH0_DOMAIN,
       clientId: process.env.AUTH0_API_ID,
       clientSecret: process.env.AUTH0_API_CLIENT_SECRET,
-      audience: `https://${process.env.VUE_APP_AUTH0_DOMAIN}/api/v2/`,
+      audience: `https://${process.env.AUTH0_DOMAIN}/api/v2/`,
       scope: scopes.join(' ')
     }
     const ManagementClient = require('auth0').ManagementClient
