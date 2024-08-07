@@ -60,6 +60,10 @@ class Resource {
       title: 'Quotation',
       type: 'object',
       properties: {
+        title: {
+          type: 'string',
+          description: 'The title for the quotation.'
+        },
         text: {
           type: 'string',
           description: 'The text of the quotation.'
@@ -86,12 +90,11 @@ class Resource {
     return this.store.find(x => x.resource_id == resource_id)
   }
 
-  create ({ text, author }) {
+  create ({ title, text, author }) {
     const resource_id = this.nextId
-    console.log(resource_id)
     const resource = {
       resource_id,
-      title: `Document #${resource_id}`,
+      title: title || `Document #${resource_id}`,
       text,
       author
     }
@@ -99,11 +102,11 @@ class Resource {
     return resource
   }
 
-  update ({ resource_id, text, author }) {
+  update ({ resource_id, title, text, author }) {
     const index = this.store.findIndex(x => x.resource_id == resource_id)
     const resource = {
       resource_id,
-      title: `Document #${resource_id}`,
+      title: title || `Document #${resource_id}`,
       text,
       author
     }
