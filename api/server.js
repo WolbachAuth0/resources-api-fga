@@ -37,8 +37,6 @@ if(process.env.NODE_ENV === 'production') {
 app.use('/', serveStatic(path.join(__dirname, './../dist')))
 app.use('/public', serveStatic(path.join(__dirname, './../public')))
 
-
-
 app.use('/', home)
 app.use('/profile', profile)
 app.use('/resources', resources)
