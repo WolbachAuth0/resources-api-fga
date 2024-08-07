@@ -12,7 +12,6 @@ router
     resources.list
   )
   .post(
-    // checkJWTScopes(['create:resource'], options),
     schemaValidator(resources.schemas.quotation),
     resources.create
   )
@@ -33,6 +32,10 @@ router
     // checkJWTScopes(['update:resource'], options),
     schemaValidator(resources.schemas.quotation),
     resources.update
+  )
+  .post(
+    // schemaValidator(resources.schemas.tuples),
+    resources.setAccess
   )
   .delete(
     // checkJWTScopes(['delete:resource'], options),
