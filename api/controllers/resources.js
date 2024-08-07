@@ -76,6 +76,8 @@ function remove (req, res, next) {
 
 async function setAccess(req, res, next) {
   const resource_id = req.params.resource_id
+  const user_id = req.auth.sub
+  console.log(user_id)
   // TODO: call FGA Client and CRUD auth tuples
   const data = req.body
   const payload = {
