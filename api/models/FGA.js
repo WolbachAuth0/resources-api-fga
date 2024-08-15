@@ -77,6 +77,7 @@ class FGA {
     
     return async function (req, res, next) {
       const user_id = req?.auth?.sub
+      console.log(req.auth)
       const tuple = {
         user: `user:${user_id}`,
         relation,
