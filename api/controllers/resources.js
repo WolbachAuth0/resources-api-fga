@@ -1,5 +1,4 @@
 const responseFormatter = require('./../middleware/responseFormatter')
-const fga = require('./../models/fgaClient')
 const Resource = require('./../models/Resource')
 const resource = new Resource()
 
@@ -16,8 +15,8 @@ module.exports = {
 }
 
 function list (req, res, next) {
-  const query = { user_id: req?.auth?.user_id }
-  
+  const objects = req.objects.map(x => parseInt(x.split(':')[1]))
+  console.log(objects)
   const resources = resource.list(query)
   const payload = {
     status: 200,
