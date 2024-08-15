@@ -1,6 +1,9 @@
 const router = require('express').Router()
-const { verifyJWT, checkJWTScopes } = require('./../middleware/auth')
+// middleware
+const { verifyJWT, checkJWTScopes, fgaCheck } = require('./../middleware/auth')
 const schemaValidator = require('./../middleware/schemaValidator')
+
+// route logic
 const resources = require('./../controllers/resources')
 
 module.exports = router
@@ -21,15 +24,18 @@ router
   .all(verifyJWT)
   .get(
     // checkJWTScopes(['read:resource'], options),
+    fgaCheck('can_read'),
     resources.getById
   )
   .put(
     // checkJWTScopes(['update:resource'], options),
+    fgaCheck('can_write'),
     schemaValidator(resources.schemas.quotation),
     resources.update
   )
   .patch(
     // checkJWTScopes(['update:resource'], options),
+    fgaCheck('can_update'),
     schemaValidator(resources.schemas.quotation),
     resources.update
   )
@@ -39,6 +45,7 @@ router
   )
   .delete(
     // checkJWTScopes(['delete:resource'], options),
+    fgaCheck('can_delete'),
     resources.remove
   )
   
