@@ -1,5 +1,6 @@
 const { CredentialsMethod, OpenFgaClient } = require('@openfga/sdk')
 const responseFormatter = require('../middleware/responseFormatter')
+const { logger } = require('./logger')
 
 const options = {
   apiUrl: process.env.OKTA_FGA_BASE_URL,
@@ -84,14 +85,32 @@ class FGA {
 
       try {
         const { objects } = await fgaClient.listObjects(tuple)
-        req.objects = objects
-        console.log(objects)
+        const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
+        req.resource_ids = ids
+        logger.info(objects)
         next()
       } catch (error) {
         next(error)
       }
     }
   }
+
+  async testMe () {
+    const tuple = {
+      user: `user:auth0|66b171a53141b01fb58990f5`,
+      relation: 'owner',
+      type: 'doc'
+    }
+  
+    try {
+      const { objects } = await this.client.listObjects(tuple)
+      const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
+      console.log(objects, ids)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 }
 
 

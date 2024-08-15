@@ -1,3 +1,5 @@
+const { logger } = require('./logger')
+
 const storage = [
   {
     resource_id: 1,
@@ -83,7 +85,8 @@ class Resource {
 
   list (query) {
     // TODO: deal with queries
-    return this.store
+
+    return this.store.filter(x => query.resource_ids.includes(x.resource_id))
   }
 
   getById ({ resource_id }) {
