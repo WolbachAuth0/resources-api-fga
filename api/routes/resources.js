@@ -29,7 +29,7 @@ router
   )
   .put(
     // checkJWTScopes(['update:resource'], options),
-    fgaCheck('can_write'),
+    fgaCheck('can_update'),
     schemaValidator(resources.schemas.quotation),
     resources.update
   )
