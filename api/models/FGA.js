@@ -76,7 +76,7 @@ class FGA {
     const fgaClient = this._client
     
     return async function (req, res, next) {
-      const user_id = req?.auth?.sub
+      const user_id = req?.user?.sub
       
       const tuple = {
         user: `user:${user_id}`,
@@ -88,7 +88,6 @@ class FGA {
         const { objects } = await fgaClient.listObjects(tuple)
         const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
         req.resource_ids = ids
-        console.log('req', req)
         console.log('tuple', tuple)
         console.log('document ids', req.resource_ids)
         next()
