@@ -1,8 +1,14 @@
 const express = require('express')
 const serveStatic = require('serve-static')
-const path = require('path')
 const cors = require('cors')
 const helmet = require('helmet')
+const path = require('path')
+
+// import the env variables FIRST - Before you do anything else
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: path.join(__dirname, './../.env') })
+  require('dotenv').config({ path: path.join(__dirname, './../.env.development') })
+}
 
 // Import API routes
 const home = require('./routes')
@@ -11,13 +17,6 @@ const resources = require('./routes/resources')
 
 // Import ErrorHandler
 const errorHandler = require('./middleware/errorHandler') 
-
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: path.join(__dirname, './../.env') })
-  require('dotenv').config({ path: path.join(__dirname, './../.env.development') })
-  console.log(`starting server in ${process.env.NODE_ENV} environment flag ...`)
-}
-
 const enforceHTTPS = require('./middleware/enforceHTTPS')
 const { routerLogger, errorLogger } = require('./models/logger')
 

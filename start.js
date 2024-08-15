@@ -5,8 +5,8 @@ const cache = require('./api/models/Cache')
 startup(server)
 
 async function startup(server) {
-  logger.info(`starting server in ${process.env.NODE_ENV} mode.`)
   logger.info(`loaded environment variables from ${process.env.NODE_ENV} settings.`)
+  logger.info(`starting server in ${process.env.NODE_ENV} mode.`)
 
   try {
     await cache.connect()
