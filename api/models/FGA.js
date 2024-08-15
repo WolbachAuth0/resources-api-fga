@@ -78,8 +78,8 @@ class FGA {
       const user_id = req?.auth?.sub
       const tuple = {
         user: `user:${user_id}`,
-        relation: 'owner',
-        object: 'doc'
+        relation,
+        type
       }
 
       try {
