@@ -87,7 +87,8 @@ class FGA {
         const { objects } = await fgaClient.listObjects(tuple)
         const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
         req.resource_ids = ids
-        logger.info(objects)
+        console.log(tuple)
+        console.log(req.resource_ids)
         next()
       } catch (error) {
         next(error)
