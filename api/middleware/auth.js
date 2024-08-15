@@ -40,21 +40,19 @@ function fgaCheck (relation) {
 
     try {
       const { allowed } = await fgaClient.check(tuple)
+      if (allowed) {
+        next()
+      } else {
+        const payload = {
+          status: 401,
+          message: `User ${user_id} is not authorized to ${activity} resource ${resource_id}`,
+          data: {}
+        }
+        const json = responseFormatter(req, res, payload)
+        res.status(payload.status).json(json)
+      }
     } catch (error) {
       next(error)
-    }
-    
-    
-    if (allowed) {
-      next()
-    } else {
-      const payload = {
-        status: 401,
-        message: `User ${user_id} is not authorized to ${activity} resource ${resource_id}`,
-        data: {}
-      }
-      const json = responseFormatter(req, res, payload)
-      res.status(payload.status).json(json)
     }
   }
 }
