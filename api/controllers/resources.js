@@ -18,7 +18,7 @@ function list (req, res, next) {
   const objects = req?.objects
   const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
   console.log(objects, ids)
-
+  const query = { ids }
   const resources = resource.list(query)
   const payload = {
     status: 200,

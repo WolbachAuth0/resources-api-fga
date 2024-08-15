@@ -85,6 +85,7 @@ class FGA {
       try {
         const { objects } = await fgaClient.listObjects(tuple)
         req.objects = objects
+        console.log(objects)
         next()
       } catch (error) {
         next(error)
