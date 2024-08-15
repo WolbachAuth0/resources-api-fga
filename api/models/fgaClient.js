@@ -1,8 +1,8 @@
 const { CredentialsMethod, OpenFgaClient } = require('@openfga/sdk')
 
-const fgaClient = new OpenFgaClient({
-  apiUrl: process.env.FGA_API_URL,
-  storeId: process.env.FGA_STORE_ID,
+const options = {
+  apiUrl: process.env.OKTA_FGA_BASE_URL,
+  storeId: process.env.OKTA_FGA_STORE_ID,
   // authorizationModelId: process.env.FGA_MODEL_ID, // Optional, can be overridden per request
   credentials: {
     method: CredentialsMethod.ClientCredentials,
@@ -13,6 +13,8 @@ const fgaClient = new OpenFgaClient({
       clientSecret: process.env.OKTA_FGA_CLIENT_SECRET,
     }
   }
-})
+}
+console.log(options)
+const fgaClient = new OpenFgaClient(options)
 
 module.exports = fgaClient
