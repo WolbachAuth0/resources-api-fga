@@ -16,8 +16,8 @@ module.exports = {
 
 function list (req, res, next) {
   const objects = req?.objects
-  
-  const ids = objects && Array.prototype.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
+  const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
+  console.log(objects, ids)
 
   const resources = resource.list(query)
   const payload = {
