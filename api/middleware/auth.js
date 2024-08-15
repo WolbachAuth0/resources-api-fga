@@ -38,7 +38,12 @@ function fgaCheck (relation) {
       object: `doc:${resource_id}`
     }
 
-    const { allowed } = await fgaClient.check(tuple)
+    try {
+      const { allowed } = await fgaClient.check(tuple)
+    } catch (error) {
+      next(error)
+    }
+    
     
     if (allowed) {
       next()
