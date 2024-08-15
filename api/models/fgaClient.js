@@ -14,7 +14,6 @@ const options = {
     }
   }
 }
-console.log(options)
 const fgaClient = new OpenFgaClient(options)
 
 module.exports = fgaClient
