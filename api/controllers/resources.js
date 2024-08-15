@@ -15,8 +15,10 @@ module.exports = {
 }
 
 function list (req, res, next) {
-  const objects = req.objects.map(x => parseInt(x.split(':')[1]))
-  console.log(objects)
+  const objects = req?.objects
+  
+  const ids = objects && Array.prototype.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
+
   const resources = resource.list(query)
   const payload = {
     status: 200,
