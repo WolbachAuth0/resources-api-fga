@@ -1,4 +1,5 @@
 const responseFormatter = require('./../middleware/responseFormatter')
+
 const Resource = require('./../models/Resource')
 const resource = new Resource()
 
