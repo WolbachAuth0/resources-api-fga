@@ -2,23 +2,22 @@ const { CredentialsMethod, OpenFgaClient } = require('@openfga/sdk')
 const responseFormatter = require('../middleware/responseFormatter')
 const { logger } = require('./logger')
 
-const options = {
-  apiUrl: process.env.OKTA_FGA_BASE_URL,
-  storeId: process.env.OKTA_FGA_STORE_ID,
-  // authorizationModelId: process.env.FGA_MODEL_ID, // Optional, can be overridden per request
-  credentials: {
-    method: CredentialsMethod.ClientCredentials,
-    config: {
-      apiTokenIssuer: process.env.OKTA_FGA_API_TOKEN_ISSUER,
-      apiAudience: process.env.OKTA_FGA_API_AUDIENCE,
-      clientId: process.env.OKTA_FGA_CLIENT_ID,
-      clientSecret: process.env.OKTA_FGA_CLIENT_SECRET,
-    }
-  }
-}
-
 class FGA {
   constructor () {
+    const options = {
+      apiUrl: process.env.OKTA_FGA_BASE_URL,
+      storeId: process.env.OKTA_FGA_STORE_ID,
+      // authorizationModelId: process.env.FGA_MODEL_ID, // Optional, can be overridden per request
+      credentials: {
+        method: CredentialsMethod.ClientCredentials,
+        config: {
+          apiTokenIssuer: process.env.OKTA_FGA_API_TOKEN_ISSUER,
+          apiAudience: process.env.OKTA_FGA_API_AUDIENCE,
+          clientId: process.env.OKTA_FGA_CLIENT_ID,
+          clientSecret: process.env.OKTA_FGA_CLIENT_SECRET,
+        }
+      }
+    }
     const client = new OpenFgaClient(options)
     this._client = client
   }
@@ -36,7 +35,7 @@ class FGA {
     const fgaClient = this._client
 
     return async function (req, res, next) {
-      const user_id = req?.auth?.sub
+      const user_id = req?.user.sub
       const resource_id = req.params.resource_id
       const activity = relation.replace('can_','').replace('_', ' ')
       const tuple = {
@@ -88,28 +87,10 @@ class FGA {
         const { objects } = await fgaClient.listObjects(tuple)
         const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
         req.resource_ids = ids
-        console.log('tuple', tuple)
-        console.log('document ids', req.resource_ids)
         next()
       } catch (error) {
         next(error)
       }
-    }
-  }
-
-  async testMe () {
-    const tuple = {
-      user: `user:auth0|66b171a53141b01fb58990f5`,
-      relation: 'owner',
-      type: 'doc'
-    }
-  
-    try {
-      const { objects } = await this.client.listObjects(tuple)
-      const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
-      console.log(objects, ids)
-    } catch (error) {
-      console.log(error)
     }
   }
 
