@@ -29,7 +29,7 @@ function checkJWTPermissions (permissions) {
 
 function fgaCheck (relation) {
   return async function (req, res, next) {
-    const user_id = req.auth.user_id || req.auth.sub
+    const user_id = req?.auth?.user_id || req?.auth?.sub
     const resource_id = req.params.resource_id
     const activity = relation.replace('can_','').replace('_', ' ')
     const tuple = {
