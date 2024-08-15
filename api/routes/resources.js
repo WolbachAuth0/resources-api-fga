@@ -1,6 +1,7 @@
 const router = require('express').Router()
 // middleware
-const { verifyJWT, checkJWTScopes, fgaCheck } = require('./../middleware/auth')
+const { verifyJWT, checkJWTScopes } = require('./../middleware/auth')
+const fga = require('./../models/FGA')
 const schemaValidator = require('./../middleware/schemaValidator')
 
 // route logic
@@ -12,6 +13,7 @@ router
   .route('/')
   .all(verifyJWT)
   .get(
+    fga.listObjects('owner', 'doc'),
     resources.list
   )
   .post(
@@ -23,29 +25,24 @@ router
   .route('/:resource_id')
   .all(verifyJWT)
   .get(
-    // checkJWTScopes(['read:resource'], options),
-    fgaCheck('can_read'),
+    fga.check('can_read'),
     resources.getById
   )
   .put(
-    // checkJWTScopes(['update:resource'], options),
-    fgaCheck('can_update'),
+    fga.check('can_update'),
     schemaValidator(resources.schemas.quotation),
     resources.update
   )
   .patch(
-    // checkJWTScopes(['update:resource'], options),
-    fgaCheck('can_update'),
+    fga.check('can_update'),
     schemaValidator(resources.schemas.quotation),
     resources.update
   )
   .post(
-    // schemaValidator(resources.schemas.tuples),
     resources.setAccess
   )
   .delete(
-    // checkJWTScopes(['delete:resource'], options),
-    fgaCheck('can_delete'),
+    fga.check('can_delete'),
     resources.remove
   )
   
