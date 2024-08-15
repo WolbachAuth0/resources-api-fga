@@ -7,9 +7,9 @@ module.exports = function (err, req, res, next) {
     data: {}
   }
   if (err.status == 401) {
-    payload.data = err.stack.split('\n')[0]
+    payload.data = err.stack.split('\n')[0] || []
   } else if (err.stack) {
-    payload.data = err.stack.split('\n')
+    payload.data = err.stack.split('\n') || []
   } else {
     payload.data = []
   }
