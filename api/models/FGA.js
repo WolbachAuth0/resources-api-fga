@@ -86,7 +86,6 @@ class FGA {
       try {
         const { objects } = await fgaClient.listObjects(tuple)
         const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
-        console.log(`found ${ids.join(', ')} document ids where user:${user_id} has ${relation} relationship`)
         req.resource_ids = ids
         next()
       } catch (error) {
