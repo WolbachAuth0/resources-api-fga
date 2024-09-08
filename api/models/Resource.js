@@ -82,7 +82,9 @@ class Resource {
   }
 
   list (query) {
-    return this.store.filter(x => query.resource_ids.includes(x.resource_id))
+    const list = this.store.filter(x => query.resource_ids.includes(x.resource_id))
+    console.log(list)
+    return list
   }
 
   getById ({ resource_id }) {
