@@ -37,18 +37,24 @@ class Resource {
       {
         resource_id: 6,
         title: 'Document #6',
-        text: 'Invincibility lies in defense; The possibility of victory in the attack.',
-        author: 'Sun Tzu'
+        text: 'I destroy my enemies when I make them my friends.',
+        author: 'Abraham Lincoln'
       },
       {
         resource_id: 7,
         title: 'Document #7',
-        text: "Freedom is never more than one generation away from extinction. We didn't pass it to our children in the bloodstream. It must be fought for, protected, and handed on to them to do the same.",
-        author: 'Ronald Reagan'
+        text: 'Invincibility lies in defense; The possibility of victory in the attack.',
+        author: 'Sun Tzu'
       },
       {
         resource_id: 8,
         title: 'Document #8',
+        text: "Freedom is never more than one generation away from extinction. We didn't pass it to our children in the bloodstream. It must be fought for, protected, and handed on to them to do the same.",
+        author: 'Ronald Reagan'
+      },
+      {
+        resource_id: 9,
+        title: 'Document #9',
         text: 'Peace is not the absence of conflict. It is the ability to handle conflict by peaceful means.',
         author: 'Ronald Reagan'
       }
