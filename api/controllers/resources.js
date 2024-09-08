@@ -60,7 +60,7 @@ function update (req, res, next) {
   const data = resource.update(document)
   const payload = {
     status: 200,
-    message: `Updated resource with id ${resource_id}`,
+    message: `Updated resource with id ${document.resource_id}`,
     data
   }
   const json = responseFormatter(req, res, payload)
