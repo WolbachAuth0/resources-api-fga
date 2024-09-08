@@ -71,12 +71,12 @@ class FGA {
    * @param {string} type the object type
    * @returns Express.js middleware function
    */
-  listObjects(relation, type) {
+  listObjects(type) {
     const fgaClient = this._client
     
     return async function (req, res, next) {
       const user_id = req?.user?.sub
-      
+      const relation = req.query?.relation || 'owner'
       const tuple = {
         user: `user:${user_id}`,
         relation,
@@ -95,6 +95,7 @@ class FGA {
   }
 
 }
+
 
 
 const fga = new FGA()

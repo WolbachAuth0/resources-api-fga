@@ -13,7 +13,7 @@ router
   .route('/')
   .all(verifyJWT)
   .get(
-    fga.listObjects('owner', 'doc'),
+    fga.listObjects('doc'),
     resources.list
   )
   .post(
