@@ -106,7 +106,7 @@ class Resource {
   update ({ resource_id, title, text, author }) {
     const index = this.store.findIndex(x => x.resource_id == resource_id)
     const resource = {
-      resource_id,
+      resource_id: parseInt(resource_id),
       title: title || `Document #${resource_id}`,
       text,
       author
