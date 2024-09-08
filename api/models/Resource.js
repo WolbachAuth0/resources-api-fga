@@ -111,7 +111,7 @@ class Resource {
       text,
       author
     }
-    this.store.splice(index, 1, resource)
+    this.store[index] = resource
     return resource
   }
 

@@ -51,9 +51,13 @@ function create (req, res, next) {
 }
 
 function update (req, res, next) {
-  const resource_id = req.params.resource_id
-  const { title, text, author } = req.body
-  const data = resource.update({ resource_id, title, text, author })
+  const document = {
+    resource_id: req.params.resource_id,
+    title: req.body.title,
+    text: req.body.text,
+    author: req.body.author
+  }
+  const data = resource.update(document)
   const payload = {
     status: 200,
     message: `Updated resource with id ${resource_id}`,
