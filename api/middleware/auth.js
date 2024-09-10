@@ -61,7 +61,7 @@ function fgaCheck (relation) {
 function listObjects (type) {
   return async function (req, res, next) {
     const user_id = req?.user?.sub
-    const relations = req.query?.relations.split(',') || ['owner']
+    const relations = req.query?.relations?.split(',') || ['owner']
     
     try {
       let temp = []
