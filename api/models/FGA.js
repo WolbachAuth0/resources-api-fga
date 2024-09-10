@@ -60,7 +60,8 @@ class FGA {
       'owner',
       'viewer'
     ]
-    const response = await this.client.listObjects({ user, object, relations })
+    const contextualTuples = []
+    const response = await this.client.listRelations({ user, object, relations })
     return response.relations      
   }
 
