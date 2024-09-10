@@ -45,3 +45,9 @@ router
     resources.remove
   )
   
+router
+  .route('/:resource_id/relations')
+  .all(verifyJWT)
+  .get(
+    resources.listRelations
+  )

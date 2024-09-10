@@ -1,5 +1,6 @@
 const responseFormatter = require('./../middleware/responseFormatter')
 const Resource = require('./../models/Resource')
+const FGA = require('./../models/FGA')
 const resource = new Resource()
 
 module.exports = {
@@ -9,10 +10,13 @@ module.exports = {
   update,
   remove,
   setAccess,
+  listRelations,
   schemas: {
     quotation: Resource.schema
   }
 }
+
+// CRUD methods
 
 function list (req, res, next) {
   const resource_ids = req?.resource_ids
@@ -79,9 +83,11 @@ function remove (req, res, next) {
   res.status(payload.status).json(json)
 }
 
+// AuthZ FGA endpoints
+
 async function setAccess(req, res, next) {
   const resource_id = req.params.resource_id
-  const user_id = req.auth.sub
+  const user_id = req?.user?.sub
   console.log(user_id)
   // TODO: call FGA Client and CRUD auth tuples
   const data = req.body
@@ -92,4 +98,23 @@ async function setAccess(req, res, next) {
   }
   const json = responseFormatter(req, res, payload)
   res.status(payload.status).json(json)
+}
+
+async function listRelations (req, res, next) {
+  const user_id = req?.user?.sub
+  const resource_id = req.params.resource_id
+  const options = {
+    user: `user:${user_id}`,
+    object: `doc:${resource_id}`
+  }
+
+  const relations = await fga.listRelations(options)
+  const payload = {
+    status: 200,
+    message: `found ${relations.length} relationships between ${options.user} and ${options.object}.`,
+    data: relations
+  }
+  const json = responseFormatter(req, res, payload)
+  res.status(payload.status).json(json)
+
 }
