@@ -61,25 +61,16 @@ function fgaCheck (relation) {
 function listObjects (type) {
   return async function (req, res, next) {
     const user_id = req?.user?.sub
-    const relations = req.query?.relations?.split(',') || ['owner']
+    const relation = req.query?.relation || 'owner'
     
     try {
-      let temp = []
-      for (let relation of relations) {
-        const tuple = {
-          user: `user:${user_id}`,
-          relation,
-          type
-        }
-        const ids = await fga.listObjects(tuple)
-        temp.push(ids)
+      const tuple = {
+        user: `user:${user_id}`,
+        relation,
+        type
       }
-      // process array
-      temp = temp
-        .flat()
-        .sort((a, b) => a - b);
-
-      req.resource_ids = [...new Set(temp)]
+      const ids = await fga.listObjects(tuple)
+      req.resource_ids = ids
       next()
     } catch (error) {
       next(error)
