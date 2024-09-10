@@ -31,36 +31,9 @@ class FGA {
    * @param {string} relation 
    * @returns Express.js middleware function
    */
-  check (relation) {
-    const fgaClient = this._client
-
-    return async function (req, res, next) {
-      const user_id = req?.user.sub
-      const resource_id = req.params.resource_id
-      const activity = relation.replace('can_','').replace('_', ' ')
-      const tuple = {
-        user: `user:${user_id}`,
-        relation: relation,
-        object: `doc:${resource_id}`
-      }
-
-      try {
-        const { allowed } = await fgaClient.check(tuple)
-        if (allowed) {
-          next()
-        } else {
-          const payload = {
-            status: 401,
-            message: `User ${user_id} is not authorized to ${activity} resource ${resource_id}`,
-            data: {}
-          }
-          const json = responseFormatter(req, res, payload)
-          res.status(payload.status).json(json)
-        }
-      } catch (error) {
-        next(error)
-      }
-    }
+  async check ({ user, relation, object }) {
+    const { allowed } = await fgaClient.check({ user, relation, object })
+    return allowed
   }
 
   /**
@@ -71,32 +44,18 @@ class FGA {
    * @param {string} type the object type
    * @returns Express.js middleware function
    */
-  listObjects(type) {
-    const fgaClient = this._client
-    
-    return async function (req, res, next) {
-      const user_id = req?.user?.sub
-      const relation = req.query?.relation || 'owner'
-      const tuple = {
-        user: `user:${user_id}`,
-        relation,
-        type
-      }
+  async listObjects({ user, relation, type }) {
+    const { objects } = await this.client.listObjects({ user, relation, type })
+    const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
+    return ids
+  }
 
-      try {
-        const { objects } = await fgaClient.listObjects(tuple)
-        const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
-        req.resource_ids = ids
-        next()
-      } catch (error) {
-        next(error)
-      }
-    }
+  async listRelations ({ user, object }) {
+    const { relations } = await this.client.listObjects({ user, object })
+    return relations      
   }
 
 }
-
-
 
 const fga = new FGA()
 
