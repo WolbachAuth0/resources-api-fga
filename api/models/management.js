@@ -2,6 +2,9 @@
  * Create an instance of the Auth0 Management API client
  * with the provided scopes.
  * 
+ * documentation on the management API client
+ * https://auth0.github.io/node-auth0/classes/management.ManagementClient.html
+ * 
  * @param {String[]} scopes 
  * @returns {Object} Instance of Management API Client
  */
