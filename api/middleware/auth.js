@@ -7,6 +7,8 @@ const fga = require('./../models/FGA')
  * Verify JWT issued via Authorization Code Flow w/PKCE to user
  * 
  * NOTE: This expects the token issuer to be the custom domain.
+ * the verifyJWT function writes the decoded access token to the 
+ * req.user object
  */ 
 const verifyJWT = jwt({
   secret: jwks.expressJwtSecret({
@@ -38,7 +40,7 @@ function fgaCheck (relation) {
     }
 
     try {
-      const { allowed } = await fga.client.check(tuple)
+      const allowed = await fga.check(tuple)
       if (allowed) {
         next()
       } else {
@@ -59,17 +61,25 @@ function fgaCheck (relation) {
 function listObjects (type) {
   return async function (req, res, next) {
     const user_id = req?.user?.sub
-    const relation = req.query?.relation || 'owner'
-    const tuple = {
-      user: `user:${user_id}`,
-      relation,
-      type
-    }
-
+    const relations = req.query?.relations.split(',') || ['owner']
+    
     try {
-      const { objects } = await fga.client.listObjects(tuple)
-      const ids = objects && Array.isArray(objects) ? objects.map(x => parseInt(x.split(':')[1])) : [];
-      req.resource_ids = ids
+      let temp = []
+      for (let relation of relations) {
+        const tuple = {
+          user: `user:${user_id}`,
+          relation,
+          type
+        }
+        const ids = await fga.listObjects(tuple)
+        temp.push(ids)
+      }
+      // process array
+      temp = temp
+        .flat()
+        .sort((a, b) => a - b);
+
+      req.resource_ids = [...Set(temp)]
       next()
     } catch (error) {
       next(error)
