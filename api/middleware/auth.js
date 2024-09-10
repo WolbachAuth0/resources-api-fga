@@ -62,7 +62,7 @@ function listObjects (type) {
   return async function (req, res, next) {
     const user_id = req?.user?.sub
     const relation = req.query?.relation || 'owner'
-    
+
     try {
       const tuple = {
         user: `user:${user_id}`,
