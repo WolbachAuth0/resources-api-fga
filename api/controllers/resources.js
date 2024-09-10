@@ -1,6 +1,6 @@
 const responseFormatter = require('./../middleware/responseFormatter')
 const Resource = require('./../models/Resource')
-const FGA = require('./../models/FGA')
+const fga = require('./../models/FGA')
 const resource = new Resource()
 
 module.exports = {
@@ -17,7 +17,6 @@ module.exports = {
 }
 
 // CRUD methods
-
 function list (req, res, next) {
   const resource_ids = req?.resource_ids
   const query = { resource_ids }
