@@ -51,8 +51,17 @@ class FGA {
   }
 
   async listRelations ({ user, object }) {
-    const { relations } = await this.client.listObjects({ user, object })
-    return relations      
+    const relations = [
+      'can_change_owner',
+      'can_delete',
+      'can_read',
+      'can_share',
+      'can_update',
+      'owner',
+      'viewer'
+    ]
+    const response = await this.client.listObjects({ user, object, relations })
+    return response.relations      
   }
 
 }
