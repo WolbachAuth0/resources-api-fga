@@ -50,7 +50,7 @@ router
   )
 
 router
-  .route('/:resource_id/invite')
+  .route('/:resource_id/invitation')
   .post(
     fgaCheck('can_share'),
     schemaValidator(resources.schemas.invitation),
