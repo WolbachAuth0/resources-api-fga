@@ -1,5 +1,4 @@
 const responseFormatter = require('./../middleware/responseFormatter')
-const authenticationAPI = require('./../models/authenticationAPI')
 
 module.exports = {
   hello,

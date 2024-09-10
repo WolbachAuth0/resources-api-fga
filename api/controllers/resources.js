@@ -1,6 +1,8 @@
 const responseFormatter = require('./../middleware/responseFormatter')
-const Resource = require('./../models/Resource')
+const authenticationAPI = require('./../models/authenticationAPI')
 const fga = require('./../models/FGA')
+
+const Resource = require('./../models/Resource')
 const resource = new Resource()
 
 module.exports = {
@@ -9,10 +11,20 @@ module.exports = {
   create,
   update,
   remove,
-  setAccess,
+  invite,
   listRelations,
   schemas: {
-    quotation: Resource.schema
+    quotation: Resource.schema,
+    invitation: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          description: 'The email address to send the invite to.'
+        }
+      },
+      required: ['email']
+    }
   }
 }
 
@@ -84,16 +96,24 @@ function remove (req, res, next) {
 
 // AuthZ FGA endpoints
 
-async function setAccess(req, res, next) {
+async function invite (req, res, next) {
+  const { email } = req.body
   const resource_id = req.params.resource_id
   const user_id = req?.user?.sub
-  console.log(user_id)
-  // TODO: call FGA Client and CRUD auth tuples
-  const data = req.body
+
+  // TODO: update tuple
+
+  // send ivite email
+  await authenticationAPI.passwordless.sendEmail({
+    email: '{EMAIL}',
+    send: 'code',
+    authParams: {} // Optional auth params.
+  })
+
   const payload = {
-    status: 200,
-    message: `Updated access to resource with id ${resource_id}`,
-    data
+    status: 201,
+    message: `Invitation to doc:${resource_id} sent to ${email}.`,
+    data: {}
   }
   const json = responseFormatter(req, res, payload)
   res.status(payload.status).json(json)

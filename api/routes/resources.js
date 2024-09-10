@@ -37,9 +37,6 @@ router
     schemaValidator(resources.schemas.quotation),
     resources.update
   )
-  .post(
-    resources.setAccess
-  )
   .delete(
     fgaCheck('can_delete'),
     resources.remove
@@ -50,4 +47,12 @@ router
   .all(verifyJWT)
   .get(
     resources.listRelations
+  )
+
+router
+  .route('/:resource_id/invite')
+  .post(
+    fgaCheck('can_share'),
+    schemaValidator(resources.schemas.invitation),
+    resources.invite
   )
