@@ -32,7 +32,7 @@ class FGA {
    * @returns Express.js middleware function
    */
   async check ({ user, relation, object }) {
-    const { allowed } = await fgaClient.check({ user, relation, object })
+    const { allowed } = await this.client.check({ user, relation, object })
     return allowed
   }
 
