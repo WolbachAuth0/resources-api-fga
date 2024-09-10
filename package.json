@@ -7,6 +7,7 @@
     "start": "node start.js",
     "dev": "nodemon start.js",
     "test:endpoints": "node ./scripts/test-endpoints.js",
+    "test:fga": "node ./scripts/fga-test.js",
     "clear-cache": "node ./scripts/clear-cache.js"
   },
   "keywords": [
