@@ -79,7 +79,7 @@ function listObjects (type) {
         .flat()
         .sort((a, b) => a - b);
 
-      req.resource_ids = [...Set(temp)]
+      req.resource_ids = [...new Set(temp)]
       next()
     } catch (error) {
       next(error)
