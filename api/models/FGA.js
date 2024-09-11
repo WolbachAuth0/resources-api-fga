@@ -60,9 +60,19 @@ class FGA {
       'owner',
       'viewer'
     ]
-    const contextualTuples = []
     const response = await this.client.listRelations({ user, object, relations })
     return response.relations      
+  }
+
+  async writeTuple ({ user_id, relation, resource_id }) {
+    const tuple = {
+      user: `user:${user_id}`,
+      relation,
+      object: `doc:${resource_id}`
+    }
+    await this.client.write({
+      writes: [tuple]
+    })
   }
 
 }

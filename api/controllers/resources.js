@@ -101,7 +101,23 @@ async function invite (req, res, next) {
   const resource_id = req.params.resource_id
   const user_id = req?.user?.sub
 
-  // TODO: update tuple
+  // update tuple
+  try {
+    const tuple = {
+      user_id: 'email|66e0e661af53e2c0ae541e26',
+      relation: 'viewer',
+      resource_id
+    }
+    await fga.writeTuple(tuple)
+  } catch (error) {
+    const payload = {
+      status: 500,
+      message: err.message || 'An error occurred.',
+      data: err
+    }
+    const json = responseFormatter(req, res, payload)
+    return res.status(payload.status).json(json)
+  }
 
   // send invite email
   const baseURL = `https://${process.env.AUTH0_CUSTOM_DOMAIN}/authorize?`
@@ -112,7 +128,6 @@ async function invite (req, res, next) {
     redirect_uri: `https://app.documents.awolcustomdemos.com/documents?resource_id=1`,
     scope:'openid profile email'
   }
-
   const qs = new URLSearchParams(query).toString()
 
   const mailOptions = {
@@ -126,9 +141,7 @@ async function invite (req, res, next) {
     let payload
     if (err) {
       payload = {
-        success: false,
         status: 500,
-        statusText: 'INTERNAL SERVER ERROR',
         message: err.message || 'An error occurred.',
         data: err
       }
@@ -139,12 +152,10 @@ async function invite (req, res, next) {
         data: {}
       }
     }
-
     const json = responseFormatter(req, res, payload)
-    res.status(payload.status).json(json)
+    returnres.status(payload.status).json(json)
   })
 
-  
 }
 
 async function listRelations (req, res, next) {
