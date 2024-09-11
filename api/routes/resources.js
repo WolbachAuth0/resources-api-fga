@@ -51,6 +51,7 @@ router
 
 router
   .route('/:resource_id/invitation')
+  .all(verifyJWT)
   .post(
     fgaCheck('can_share'),
     schemaValidator(resources.schemas.invitation),
