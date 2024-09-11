@@ -100,24 +100,13 @@ async function invite (req, res, next) {
   const { email } = req.body
   const resource_id = req.params.resource_id
   const user_id = req?.user?.sub
-
-  // update tuple
-  try {
-    const tuple = {
-      user_id: 'email|66e0e661af53e2c0ae541e26',
-      relation: 'viewer',
-      resource_id
-    }
-    await fga.writeTuple(tuple)
-  } catch (error) {
-    const payload = {
-      status: 500,
-      message: err.message || 'An error occurred.',
-      data: err
-    }
-    const json = responseFormatter(req, res, payload)
-    return res.status(payload.status).json(json)
+  const tuple = {
+    user_id: 'email|66e0e661af53e2c0ae541e26',
+    relation: 'viewer',
+    resource_id
   }
+
+  
 
   // send invite email
   const baseURL = `https://${process.env.AUTH0_CUSTOM_DOMAIN}/authorize?`
@@ -137,23 +126,38 @@ async function invite (req, res, next) {
     html: `Please <a href="${baseURL}${qs}">login</a> to inspect your document.`
   }
 
-  transporter.sendMail(mailOptions, function (err, info) {
-    let payload
+  transporter.sendMail(mailOptions, async function (err, info) {
+
     if (err) {
       payload = {
         status: 500,
         message: err.message || 'An error occurred.',
         data: err
       }
-    } else {
-      payload = {
-        status: 201,
-        message: `Invitation to doc:${resource_id} sent to ${email} by ${user_id}.`,
-        data: {}
+      const json = responseFormatter(req, res, payload)
+      return res.status(payload.status).json(json)
+    }
+
+    // update tuple
+    try {
+      fga.writeTuple(tuple)
+    } catch (error) {
+      const payload = {
+        status: 500,
+        message: err.message || 'An error occurred.',
+        data: err
       }
+      const json = responseFormatter(req, res, payload)
+      return res.status(payload.status).json(json)
+    }
+
+    const payload = {
+      status: 201,
+      message: `Invitation to doc:${resource_id} sent to ${email} by ${user_id}.`,
+      data: {}
     }
     const json = responseFormatter(req, res, payload)
-    returnres.status(payload.status).json(json)
+    res.status(payload.status).json(json)
   })
 
 }
