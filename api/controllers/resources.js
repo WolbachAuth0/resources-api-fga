@@ -1,5 +1,5 @@
 const responseFormatter = require('./../middleware/responseFormatter')
-const authenticationAPI = require('./../models/authenticationAPI')
+const transporter = require('./../models/email')
 const fga = require('./../models/FGA')
 
 const Resource = require('./../models/Resource')
@@ -103,25 +103,48 @@ async function invite (req, res, next) {
 
   // TODO: update tuple
 
-  // send ivite email
-  try {
-    await authenticationAPI.passwordless.sendEmail({
-      email,
-      send: 'code',
-      authParams: {} // Optional auth params.
-    })
-  } catch (error) {
-    throw error
+  // send invite email
+  const baseURL = `https://${process.env.AUTH0_CUSTOM_DOMAIN}/authorize?`
+  const query = {
+    response_type: 'token',
+    client_id: process.env.FRONTEND_AUTH0_CLIENT_ID,
+    connection: 'email',
+    redirect_uri: `https://app.documents.awolcustomdemos.com/documents?resource_id=1`,
+    scope:'openid profile email'
   }
-  
 
-  const payload = {
-    status: 201,
-    message: `Invitation to doc:${resource_id} sent to ${email} by ${user_id}.`,
-    data: {}
+  const qs = new URLSearchParams(query).toString()
+
+  const mailOptions = {
+    from: '',
+    to: 'guest.user@gmail.com',
+    subject: 'You have been invited to a document',
+    html: `Please <a href="${baseURL}${qs}">login</a> to inspect your document.`
   }
-  const json = responseFormatter(req, res, payload)
-  res.status(payload.status).json(json)
+
+  transporter.sendMail(mailOptions, function (err, info) {
+    let payload
+    if (err) {
+      payload = {
+        success: false,
+        status: 500,
+        statusText: 'INTERNAL SERVER ERROR',
+        message: err.message || 'An error occurred.',
+        data: err
+      }
+    } else {
+      payload = {
+        status: 201,
+        message: `Invitation to doc:${resource_id} sent to ${email} by ${user_id}.`,
+        data: {}
+      }
+    }
+
+    const json = responseFormatter(req, res, payload)
+    res.status(payload.status).json(json)
+  })
+
+  
 }
 
 async function listRelations (req, res, next) {
