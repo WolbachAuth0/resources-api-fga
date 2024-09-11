@@ -104,15 +104,20 @@ async function invite (req, res, next) {
   // TODO: update tuple
 
   // send ivite email
-  await authenticationAPI.passwordless.sendEmail({
-    email: '{EMAIL}',
-    send: 'code',
-    authParams: {} // Optional auth params.
-  })
+  try {
+    await authenticationAPI.passwordless.sendEmail({
+      email,
+      send: 'code',
+      authParams: {} // Optional auth params.
+    })
+  } catch (error) {
+    throw error
+  }
+  
 
   const payload = {
     status: 201,
-    message: `Invitation to doc:${resource_id} sent to ${email}.`,
+    message: `Invitation to doc:${resource_id} sent to ${email} by ${user_id}.`,
     data: {}
   }
   const json = responseFormatter(req, res, payload)
