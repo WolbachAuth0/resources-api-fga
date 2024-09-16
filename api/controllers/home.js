@@ -24,5 +24,6 @@ function login (req, res) {
   })
   const qs = new URLSearchParams(query).toString()
   const to = `https://${process.env.AUTH0_CUSTOM_DOMAIN}/authorize?${qs}`
+  console.log('redirect', to)
   res.redirect(to)
 }
