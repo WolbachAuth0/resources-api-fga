@@ -54,13 +54,22 @@ function getById (req, res, next) {
   res.status(payload.status).json(json)
 }
 
-function create (req, res, next) {
+async function create (req, res, next) {
   const data = resource.create(req.body)
   const payload = {
     status: 201,
     message: `Created resource with id ${data.resource_id}`,
     data
   }
+  const tuple = {
+    user_id: req?.user?.sub,
+    relation: 'owner',
+    resource_id: data.resource_id
+  }
+
+  // NOTE: if an error occurs, the global error handler should catch it.
+  await fga.writeTuple(tuple)
+
   const json = responseFormatter(req, res, payload)
   res.status(payload.status).json(json)
 }
@@ -95,18 +104,17 @@ function remove (req, res, next) {
 }
 
 // AuthZ FGA endpoints
-
 async function invite (req, res, next) {
   const { email } = req.body
   const resource_id = req.params.resource_id
   const user_id = req?.user?.sub
+  
+  // TODO: get this info from the req.body
   const tuple = {
     user_id: 'email|66e0e661af53e2c0ae541e26',
     relation: 'viewer',
     resource_id
   }
-
-  
 
   // send invite email
   const baseURL = `https://${process.env.AUTH0_CUSTOM_DOMAIN}/authorize?`
@@ -114,52 +122,37 @@ async function invite (req, res, next) {
     response_type: 'token',
     client_id: process.env.FRONTEND_AUTH0_CLIENT_ID,
     connection: 'email',
-    redirect_uri: `https://app.documents.awolcustomdemos.com/documents?resource_id=1`,
+    redirect_uri: `https://app.documents.awolcustomdemos.com/documents?resource_id=${resource_id}`,
     scope:'openid profile email'
   }
   const qs = new URLSearchParams(query).toString()
-
   const mailOptions = {
-    from: '',
+    from: 'admin@documents.awolcustomdemos.com',
     to: 'guest.user@gmail.com',
     subject: 'You have been invited to a document',
     html: `Please <a href="${baseURL}${qs}">login</a> to inspect your document.`
   }
 
-  transporter.sendMail(mailOptions, async function (err, info) {
+  try {
+    const info = await transporter.sendMail(mailOptions)
 
-    if (err) {
-      payload = {
-        status: 500,
-        message: err.message || 'An error occurred.',
-        data: err
-      }
-      const json = responseFormatter(req, res, payload)
-      return res.status(payload.status).json(json)
-    }
-
-    // update tuple
-    try {
-      fga.writeTuple(tuple)
-    } catch (error) {
-      const payload = {
-        status: 500,
-        message: err.message || 'An error occurred.',
-        data: err
-      }
-      const json = responseFormatter(req, res, payload)
-      return res.status(payload.status).json(json)
-    }
-
+    await fga.writeTuple(tuple)
     const payload = {
       status: 201,
       message: `Invitation to doc:${resource_id} sent to ${email} by ${user_id}.`,
-      data: {}
+      data: info
     }
     const json = responseFormatter(req, res, payload)
     res.status(payload.status).json(json)
-  })
-
+  } catch (err) {
+    const payload = {
+      status: 500,
+      message: err.message || 'An error occurred.',
+      data: err
+    }
+    const json = responseFormatter(req, res, payload)
+    return res.status(payload.status).json(json)
+  }
 }
 
 async function listRelations (req, res, next) {
