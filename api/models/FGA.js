@@ -75,6 +75,14 @@ class FGA {
     })
   }
 
+  async removeTuplesForResource ({ resource_id }) {
+    const query = {
+      object: `doc:${resource_id}`
+    }
+    const { tuples } = await this.client.read(query)
+    await this.client.deleteTuples(tuples)
+  }
+
 }
 
 const fga = new FGA()

@@ -66,10 +66,8 @@ async function create (req, res, next) {
     relation: 'owner',
     resource_id: data.resource_id
   }
-
   // NOTE: if an error occurs, the global error handler should catch it.
   await fga.writeTuple(tuple)
-
   const json = responseFormatter(req, res, payload)
   res.status(payload.status).json(json)
 }
@@ -91,7 +89,7 @@ function update (req, res, next) {
   res.status(payload.status).json(json)
 }
 
-function remove (req, res, next) {
+async function remove (req, res, next) {
   const resource_id = req.params.resource_id
   const data = resource.remove({ resource_id })
   const payload = {
@@ -99,6 +97,9 @@ function remove (req, res, next) {
     message: `Deleted resource with id ${resource_id}`,
     data
   }
+  // NOTE: if an error occurs, the global error handler should catch it.
+  await fga.removeTuplesForResource({ resource_id })
+
   const json = responseFormatter(req, res, payload)
   res.status(payload.status).json(json)
 }
